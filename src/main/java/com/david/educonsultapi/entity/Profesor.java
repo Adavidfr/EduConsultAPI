@@ -1,5 +1,6 @@
 package com.david.educonsultapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,6 @@ public class Profesor {
     private String correoElectronico;
 
     @OneToMany(mappedBy = "profesor")
+    @JsonIgnore
     private List<Curso> cursos;
-
-
 }
