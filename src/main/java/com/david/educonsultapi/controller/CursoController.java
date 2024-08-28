@@ -2,6 +2,8 @@ package com.david.educonsultapi.controller;
 
 import com.david.educonsultapi.entity.Curso;
 import com.david.educonsultapi.exception.CursoNotFoundException;
+import com.david.educonsultapi.exception.EstudianteNotFoundException;
+import com.david.educonsultapi.exception.ProfesorNotFoundException;
 import com.david.educonsultapi.service.CursoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,6 +46,31 @@ public class CursoController {
         Curso nuevoCurso = cursoService.crear(curso);
         return new ResponseEntity<>(nuevoCurso, HttpStatus.CREATED);
     }
+
+    @PostMapping("/{cursoId}/estudiantes/{estudianteId}")
+    public ResponseEntity<Curso> asignarCursoAEstudiante(
+            @PathVariable Long cursoId,
+            @PathVariable Long estudianteId) {
+        try {
+            Curso cursoActualizado = cursoService.asignarCursoAEstudiante(cursoId, estudianteId);
+            return ResponseEntity.ok(cursoActualizado);
+        } catch (CursoNotFoundException | EstudianteNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/{cursoId}/profesores/{profesorId}")
+    public ResponseEntity<Curso> asignarCursoAProfesor(
+            @PathVariable Long cursoId,
+            @PathVariable Long profesorId) {
+        try {
+            Curso cursoActualizado = cursoService.asignarCursoAProfesor(cursoId, profesorId);
+            return ResponseEntity.ok(cursoActualizado);
+        } catch (CursoNotFoundException | ProfesorNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Curso> editarCurso(@PathVariable Long id, @RequestBody Curso cursoDetalles) {
