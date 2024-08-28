@@ -1,5 +1,7 @@
 package com.david.educonsultapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +25,11 @@ public class Estudiante {
     private String correoElectronico;
 
     @ManyToMany(mappedBy = "estudiantes")
+    @JsonIgnore
     private List<Curso> cursos;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public List<Curso> getCursos() {
+        return cursos;
+    }
 }
