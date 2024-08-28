@@ -1,7 +1,9 @@
 package com.david.educonsultapi.service.Impl;
 
+import com.david.educonsultapi.entity.Curso;
 import com.david.educonsultapi.entity.Estudiante;
 import com.david.educonsultapi.exception.EstudianteNotFoundException;
+import com.david.educonsultapi.repository.CursoRepository;
 import com.david.educonsultapi.repository.EstudianteRepository;
 import com.david.educonsultapi.service.EstudianteService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class EstudianteServiceImpl implements EstudianteService {
 
     private final EstudianteRepository estudianteRepository;
+    private final CursoRepository cursoRepository;
 
     @Override
     public Optional<Estudiante> findById(Long id) {
@@ -60,10 +63,19 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public void eliminar(Long id) {
-        if (!estudianteRepository.existsById(id)) {
+        Optional<Estudiante> estudiante = estudianteRepository.findById(id);
+        if (estudiante.isPresent()) {
+            Estudiante e = estudiante.get();
+
+            for (Curso curso : e.getCursos()) {
+                curso.getEstudiantes().remove(e);
+                cursoRepository.save(curso);
+            }
+
+            estudianteRepository.delete(e);
+        } else {
             throw new EstudianteNotFoundException("Estudiante con id " + id + " no encontrado");
         }
-        estudianteRepository.deleteById(id);
     }
 
 }
