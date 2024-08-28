@@ -13,5 +13,7 @@ public interface CursoService {
     Curso crear(Curso curso);
     Optional<Curso> editar(Long id, Curso cursoActualizado);
     void eliminar(Long id);
+    Curso asignarCursoAEstudiante(Long cursoId, Long estudianteId);
+    Curso asignarCursoAProfesor(Long cursoId, Long profesorId);
 
 }
